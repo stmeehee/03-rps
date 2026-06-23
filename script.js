@@ -81,11 +81,11 @@ let cpuWins = 0
 let ties = 0
 
 function runRpcGame() {
-    let playerMoves = ["rock", "paper", "scissor", "rock", "paper"]
+    // let playerMoves = ["rock", "paper", "scissor", "rock", "paper"]
 
     for (let i = 0; i < GAMEROUNDS; i += 1) {
 
-        let playerInp = getPlayerInput(i, playerMoves[i])
+        let playerInp = getPlayerInput(i) //, playerMoves[i])
         let cpuInp = getCpuInput()
         let res = checkWinner(playerInp, cpuInp)
         try {
