@@ -79,43 +79,47 @@ function checkWinner(pMove, cpuMove) {
     return winner
 }
 
+function playRound(roundNumber) {
+    let playerMoves = ["rock", "paper", "scissor", "rock", "paper"]
+    let cpuMoves = ["scissor", "rock", "rock", "paper", "paper"]
+    
+    let playerInput;
+    if (typeof window === "undefined") {
+        playerInput = getPlayerInput(roundNumber, playerMoves[roundNumber])
+    }
+    else {
+        playerInput = getPlayerInput(roundNumber)
+    }
+    let cpuInput = getCpuInput()//cpuMoves[i])
+    let res = checkWinner(playerInput, cpuInput)
+    try {
+        alert(`${res} won this round`)
+    }
+    catch (error) {
+        if (error instanceof ReferenceError) {
+            console.log(`${res} won this round`)
+        }
+        else {
+            throw error;
+        }
+    }
+}
+
 const GAMEROUNDS = 5
 let playerWins = 0
 let cpuWins = 0
 
 function runRpcGame() {
-    let playerMoves = ["rock", "paper", "scissor", "rock", "paper"]
-    let cpuMoves = ["scissor", "rock", "rock", "paper", "paper"]
-
     for (let i = 0; i < GAMEROUNDS; i += 1) {
 
-        let playerInput;
-        if (typeof window === "undefined") {
-            playerInput = getPlayerInput(i, playerMoves[i])
-        }
-        else {
-            playerInput = getPlayerInput(i)
-        }
-        let cpuInput = getCpuInput()//cpuMoves[i])
-        let res = checkWinner(playerInput, cpuInput)
-        try {
-            alert(`${res} won this round`)
-        }
-        catch (error) {
-            if (error instanceof ReferenceError) {
-                console.log(`${res} won this round`)
-            }
-            else {
-                throw error;
-            }
-        }
+        playRound(i)
     }
     let winnerMsg = ""
     if (playerWins > cpuWins){
         winnerMsg = `WINNER: Player won ${playerWins} out of ${GAMEROUNDS} rounds`
     } 
     else if (playerWins < cpuWins) {
-         winnerMsg = `WINNER: CPU won ${cpuWins} out of all ${GAMEROUNDS} rounds`
+        winnerMsg = `WINNER: CPU won ${cpuWins} out of all ${GAMEROUNDS} rounds`
     }
     else {
         winnerMsg =  "WINNER: It's a tie"
