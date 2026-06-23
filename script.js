@@ -15,7 +15,7 @@ function addElementTOHtml() {
 }
 
 function getPlayerInput(round, forceMove) {
-    if (!forceMove) {
+    if (forceMove === undefined) {
         let pInput = ""
         if (round === GAMEROUNDS - 1) {
             pInput = prompt("Last round! Enter rock, paper or scissors")
@@ -26,49 +26,50 @@ function getPlayerInput(round, forceMove) {
         return pInput.toLowerCase()
     }
     return forceMove.toLowerCase()
-
 }
 
-function getCpuInput() {
-    const prob = Math.random().toFixed(2)
-    let cpuRes = ""
-    if (prob < 0.33) {
-        cpuRes = "rock"
+function getCpuInput(forceMove) {
+    if (forceMove === undefined) {
+        const prob = Math.random().toFixed(2)
+        let cpuRes = ""
+        if (prob < 0.33) {
+            cpuRes = "rock"
+        }
+        else if (prob >= 0.33 && prob < 0.66) {
+            cpuRes = "paper"
+        }
+        else {
+            cpuRes = "scissor"
+        }
+        return cpuRes 
     }
-    else if (prob >= 0.33 && prob < 0.66) {
-        cpuRes = "paper"
-    }
-    else {
-        cpuRes = "scissor"
-    }
-    return cpuRes
+    return forceMove
 }
 
 function checkWinner(pMove, cpuMove) {
-    const ro = "rock"
-    const pa = "paper"
-    const sc = "scissor"
+    let playerWon = null
     let winner = ""
 
-    if (!winner) {
-        winner = (pMove == ro && cpuMove == sc) ? "Player" : "CPU";
-    }
-    if (!winner) {
-        winner = (pMove === pa && cpuMove === ro) ? "Player" : "CPU";
-    }
-    if (!winner) {
-        winner = (pMove === sc && cpuMove === pa) ? "Player" : "CPU";
-    }
-
     if (pMove === cpuMove) {
-        winner = "nobody"
-    }
+    winner = "nobody"
+    } 
     else {
-        if (winner === "Player") {
-            playerWins += 1
+        if (playerWon == null) {
+            playerWon = (pMove == "rock" && cpuMove == "scissor") ? true : null;
         }
-        else if (winner === "CPU") {
+        if (playerWon == null) {
+            playerWon = (pMove === "paper" && cpuMove === "rock") ? true : null;
+        }
+        if (playerWon == null) {
+            playerWon = (pMove === "scissor" && cpuMove === "paper") ? true : null;
+        }
+        if (playerWon === true) {
+            playerWins += 1
+            winner = "Player"
+        }
+        else {
             cpuWins += 1
+            winner = "CPU"
         }
     }
 
@@ -78,16 +79,22 @@ function checkWinner(pMove, cpuMove) {
 const GAMEROUNDS = 5
 let playerWins = 0
 let cpuWins = 0
-let ties = 0
 
 function runRpcGame() {
-    // let playerMoves = ["rock", "paper", "scissor", "rock", "paper"]
+    let playerMoves = ["rock", "paper", "scissor", "rock", "paper"]
+    let cpuMoves = ["scissor", "rock", "rock", "paper", "paper"]
 
     for (let i = 0; i < GAMEROUNDS; i += 1) {
 
-        let playerInp = getPlayerInput(i) //, playerMoves[i])
-        let cpuInp = getCpuInput()
-        let res = checkWinner(playerInp, cpuInp)
+        let playerInput;
+        if (typeof window === "undefined") {
+            playerInput = getPlayerInput(i, playerMoves[i])
+        }
+        else {
+            playerInput = getPlayerInput(i)
+        }
+        let cpuInput = getCpuInput()//cpuMoves[i])
+        let res = checkWinner(playerInput, cpuInput)
         try {
             alert(`${res} won this round`)
         }
@@ -100,9 +107,16 @@ function runRpcGame() {
             }
         }
     }
-    let winnerMsg = (playerWins > cpuWins)
-                    ? `Player won ${playerWins} out of ${GAMEROUNDS} rounds`
-                    : `CPU won ${cpuWins} out of all ${GAMEROUNDS} rounds`
+    let winnerMsg = ""
+    if (playerWins > cpuWins){
+        winnerMsg = `Player won ${playerWins} out of ${GAMEROUNDS} rounds`
+    } 
+    else if (playerWins < cpuWins) {
+         winnerMsg = `CPU won ${cpuWins} out of all ${GAMEROUNDS} rounds`
+    }
+    else {
+        winnerMsg = (playerWins === cpuWins) ? "WINNER: It's a tie " : ""
+    }
     let tieMsg = ` with ${Math.abs((playerWins+cpuWins) - GAMEROUNDS)} ties`
     try {
         alert(winnerMsg+tieMsg)
