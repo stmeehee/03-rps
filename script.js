@@ -17,11 +17,14 @@ function addElementTOHtml() {
 function getPlayerInput(round, forceMove) {
     if (forceMove === undefined) {
         let pInput = ""
-        if (round === GAMEROUNDS - 1) {
-            pInput = prompt("Last round! Enter rock, paper or scissors")
-        }
-        else {
-        pInput = window.prompt(`Round ${round+1}: Enter rock, paper or scissors`)
+        const validpInputs = new Set(["rock", "paper", "scissor"])
+        while (!validpInputs.has(pInput)) {
+            if (round === GAMEROUNDS - 1) {
+                pInput = prompt("Last round! Enter rock, paper or scissors")
+            }
+            else {
+            pInput = window.prompt(`Round ${round+1}: Enter rock, paper or scissors`)
+            }
         }
         return pInput.toLowerCase()
     }
@@ -109,13 +112,13 @@ function runRpcGame() {
     }
     let winnerMsg = ""
     if (playerWins > cpuWins){
-        winnerMsg = `Player won ${playerWins} out of ${GAMEROUNDS} rounds`
+        winnerMsg = `WINNER: Player won ${playerWins} out of ${GAMEROUNDS} rounds`
     } 
     else if (playerWins < cpuWins) {
-         winnerMsg = `CPU won ${cpuWins} out of all ${GAMEROUNDS} rounds`
+         winnerMsg = `WINNER: CPU won ${cpuWins} out of all ${GAMEROUNDS} rounds`
     }
     else {
-        winnerMsg = (playerWins === cpuWins) ? "WINNER: It's a tie " : ""
+        winnerMsg =  "WINNER: It's a tie"
     }
     let tieMsg = ` with ${Math.abs((playerWins+cpuWins) - GAMEROUNDS)} ties`
     try {
