@@ -1,60 +1,35 @@
-// checks whether text added to p element exists 
-function checkHtmlJsConn() {
-    addElementTOHtml()
-    let para  = document.querySelector(".result")
-    let checkParaExists = para.textContent.length > 0
-    return checkParaExists
-}
-
-// adds an element and its text in linked html 
-function addElementTOHtml() {
-    let para = document.createElement("p")
-    para.textContent = "script is connected to html!"
-    para.className = "result"
-    document.body.append(para)
-}
-
-function getPlayerInput(round, forceMove) {
-    if (forceMove === undefined) {
-        let pInput = ""
-        const validpInputs = new Set(["rock", "paper", "scissor"])
-        while (!validpInputs.has(pInput)) {
-            if (round === GAMEROUNDS - 1) {
-                pInput = prompt("Last round! Enter rock, paper or scissors")
-            }
-            else {
-            pInput = window.prompt(`Round ${round+1}: Enter rock, paper or scissors`)
-            }
-        }
-        return pInput.toLowerCase()
+function getPlayerInput(forceMove) {
+    if (forceMove !== null) {
+        return forceMove 
     }
-    return forceMove.toLowerCase()
+
 }
 
 function getCpuInput(forceMove) {
-    if (forceMove === undefined) {
-        const prob = Math.random().toFixed(2)
-        let cpuRes = ""
-        if (prob < 0.33) {
-            cpuRes = "rock"
-        }
-        else if (prob >= 0.33 && prob < 0.66) {
-            cpuRes = "paper"
-        }
-        else {
-            cpuRes = "scissor"
-        }
-        return cpuRes 
+    if (forceMove !== null) {
+        return forceMove
     }
-    return forceMove
+    const prob = Math.random().toFixed(2)
+    let cpuRes = ""
+    if (prob < 0.33) {
+        cpuRes = "rock"
+    }
+    else if (prob >= 0.33 && prob < 0.66) {
+        cpuRes = "paper"
+    }
+    else {
+        cpuRes = "scissor"
+    }
+    return cpuRes 
 }
 
-function checkWinner(pMove, cpuMove) {
+function getWinner(pMove, cpuMove) {
     let playerWon = null
     let winner = ""
 
     if (pMove === cpuMove) {
     winner = "nobody"
+    ties += 1
     } 
     else {
         if (playerWon == null) {
@@ -68,82 +43,132 @@ function checkWinner(pMove, cpuMove) {
         }
         if (playerWon === true) {
             playerWins += 1
-            winner = "Player"
+            winner = "Player won this round!"
         }
         else {
             cpuWins += 1
-            winner = "CPU"
+            winner = "CPU won the round!"
         }
     }
-
     return winner
 }
 
-function playRound(roundNumber) {
-    let playerMoves = ["rock", "paper", "scissor", "rock", "paper"]
-    let cpuMoves = ["scissor", "rock", "rock", "paper", "paper"]
-    
-    let playerInput;
-    if (typeof window === "undefined") {
-        playerInput = getPlayerInput(roundNumber, playerMoves[roundNumber])
+// moves for debugging
+let PLAYERMOVES = ["rock", "paper", "scissor", "rock", "paper"]
+let CPUMOVES = ["scissor", "rock", "rock", "paper", "paper"]
+
+function playRound(playerInput) {    
+    let cpuInput;
+    if (typeof document === "undefined") {
+        playerInput = getPlayerInput(PLAYERMOVES[rounds % PLAYERMOVES.length])
+        cpuInput = getCpuInput(CPUMOVES[rounds % CPUMOVES.length])
     }
     else {
-        playerInput = getPlayerInput(roundNumber)
+        cpuInput = getCpuInput(null)
     }
-    let cpuInput = getCpuInput()//cpuMoves[i])
-    let res = checkWinner(playerInput, cpuInput)
-    try {
-        alert(`${res} won this round`)
-    }
-    catch (error) {
-        if (error instanceof ReferenceError) {
-            console.log(`${res} won this round`)
-        }
-        else {
-            throw error;
-        }
-    }
+    let res = getWinner(playerInput, cpuInput)
+    rounds +=1
+    return res
 }
 
-const GAMEROUNDS = 5
+const MAXSCORE = 5
 let playerWins = 0
 let cpuWins = 0
+let rounds = 0
+let ties = 0
 
-function runRpcGame() {
-    for (let i = 0; i < GAMEROUNDS; i += 1) {
-
-        playRound(i)
-    }
-    let winnerMsg = ""
-    if (playerWins > cpuWins){
-        winnerMsg = `WINNER: Player won ${playerWins} out of ${GAMEROUNDS} rounds`
-    } 
-    else if (playerWins < cpuWins) {
-        winnerMsg = `WINNER: CPU won ${cpuWins} out of all ${GAMEROUNDS} rounds`
+function runRpcGame(input) {    
+    let res = ""
+    if (typeof document === "undefined") {
+        while ( checkGameRunning() ) {
+        res = playRound(null)
+        console.log(res)
+        }
     }
     else {
-        winnerMsg =  "WINNER: It's a tie"
+        res = playRound(input)
     }
-    let tieMsg = ` with ${Math.abs((playerWins+cpuWins) - GAMEROUNDS)} ties`
-    try {
-        alert(winnerMsg+tieMsg)
-    }
-    catch (error) {
-        if (error instanceof ReferenceError) {
-            console.log(winnerMsg+tieMsg)
+    res =  checkGameRunning()? res : getGameEndMsg()
+    return res
+}
+
+function getGameEndMsg() {
+        let winnerMsg = ""
+        if (playerWins > cpuWins){
+            winnerMsg = `WINNER: Player won ${playerWins} out of ${rounds} rounds`
+        } 
+        else if (playerWins < cpuWins) {
+            winnerMsg = `WINNER: CPU won ${cpuWins} out of all ${rounds} rounds`
         }
+        else {
+            winnerMsg =  "WINNER: It's a tie"
+        }
+        let tieMsg = ` with ${ties} ties`
+        try {
+            alert(winnerMsg+tieMsg)
+        }
+        catch (error) {
+            if (error instanceof ReferenceError) {
+                console.log(winnerMsg+tieMsg)
+            }
+        }
+    return winnerMsg
+}
+
+function checkGameRunning() {
+    let res = cpuWins < MAXSCORE && playerWins < MAXSCORE
+    return res
+}
+
+function updateUI(playerScoreElem, cpuScoreElem, statusMsgElem, winMsg, roundElem, tiesElem) {   
+    playerScoreElem.textContent = playerWins
+    cpuScoreElem.textContent = cpuWins
+    statusMsgElem.textContent = winMsg
+    roundElem.textContent = rounds
+    tiesElem.textContent = ties
+}
+
+function getScores(playerScoreElem, cpuScoreElem, roundElem, tiesElem) {
+    playerWins = Number(playerScoreElem.textContent)
+    cpuWins = Number(cpuScoreElem.textContent)
+    rounds = Number(roundElem.textContent)
+    ties = Number(tiesElem.textContent)
+}
+
+function setup() {
+    if (typeof document !== "undefined") {
+        const playerScoreElem = document.querySelector(".player-score span")
+        const cpuScoreElem = document.querySelector(".cpu-score span")
+        const roundElem = document.querySelector(".round")
+        const tiesElem = document.querySelector(".ties-score")
+        const statusElem = document.querySelector(".status")
+        const inputButton = document.querySelector(".button-container")
+
+        document.addEventListener("playerChoice", (event) => {
+            // getScores(playerScoreElem, cpuScoreElem, roundElem, tiesElem)
+            let winner = runRpcGame(event.detail.toLowerCase())
+            // sets score and updates UI
+            updateUI(playerScoreElem, cpuScoreElem, statusElem, winner, roundElem, tiesElem)
+            })        
+        inputButton.addEventListener('click', (event) => {
+            const myEvent = new CustomEvent("playerChoice", {
+                detail: event.target.textContent
+            }) 
+            document.dispatchEvent(myEvent)
+            })
+    }
+    else {
+        let winner = runRpcGame()
     }
 }
 
-
 function main() {
-    // posts a log in the browser, not when manually run
-    // if (typeof window !== "undefined" ) {
-    // console.log("checkHtmlJsConn: ",checkHtmlJsConn())
 
-    // }
-    // runRpcGame()
-
+    if (typeof document !== "undefined")
+        setup()
+    else {
+        runRpcGame()
+    }
 }
 
 

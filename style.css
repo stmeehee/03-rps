@@ -3,7 +3,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 2px solid red;
+    /* border: 2px solid red; */
     height: 100vh;
     font-family: "roboto", sans-serif;
 }
@@ -75,7 +75,7 @@ body {
 }
 
 .game-center p {
-    border: 2px solid red;
+    /* border: 2px solid red; */
     margin: 0px;
     padding: 0px;
     /*  */
