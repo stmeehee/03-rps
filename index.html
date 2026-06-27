@@ -4,10 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="style.css">
     <script src="./script.js" defer></script>
 </head>
 
-<body style="background-color: darkkhaki;">
+<body>
+    <div class="game-window">
+        <div class="game-top">
+            <p>Rock Paper Scissor</p>
+            <div class="scores">
+                <div class="player-score">
+                    <label>Player Score: </label><span>0</span>
+                </div>
+                <div class="cpu-score">
+                    <label>Computer Score: </label><span>0</span>
+                </div>  
+            </div>
+        </div>
+        <div class="game-center">
+            <p class="status">Who won?</p>
+            <div class="hands">
+                <img class="player-hand-img" src="" alt="rock">
+                <span class="vs">VS</span>
+                <img class="cpu-hand-img" src="" alt="paper">
+            </div>
+        </div>
+        <div class="game-bottom">
+            <p class="input-msg">Choose your next move</p>
+            <div class="button-container">
+                <button>Rock</button>
+                <button>Paper</button>
+                <button>Scissor</button>
+            </div>
+        </div>
+    </div>
     
     
 </body>

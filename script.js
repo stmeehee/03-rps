@@ -138,11 +138,11 @@ function runRpcGame() {
 
 function main() {
     // posts a log in the browser, not when manually run
-    if (typeof window !== "undefined" ) {
-    console.log("checkHtmlJsConn: ",checkHtmlJsConn())
+    // if (typeof window !== "undefined" ) {
+    // console.log("checkHtmlJsConn: ",checkHtmlJsConn())
 
-    }
-    runRpcGame()
+    // }
+    // runRpcGame()
 
 }
 
