@@ -11,7 +11,13 @@
 <body>
     <div class="game-window">
         <div class="game-top">
-            <p>Rock Paper Scissor</p>
+            <div class="header">
+                <div class="left-box"></div>
+                <p>Rock Paper Scissor</p>
+                <div class="right-box">
+                    <button class="reset hidden">reset</button>
+                </div>
+            </div>
             <div class="scores">
                 <div class="player-score">
                     <label>Player Score: </label><span>0</span>
@@ -25,15 +31,15 @@
             </div>
         </div>
         <div class="game-center">
-            <p class="status">Who won?</p>
+            <p class="status">Want to Play?</p>
             <div class="hands">
-                <img class="player-hand-img" src="" alt="rock">
+                <img class="player-hand-img" src="" alt="you">
                 <span class="vs">VS</span>
-                <img class="cpu-hand-img" src="" alt="paper">
+                <img class="cpu-hand-img" src="" alt="your enemy">
             </div>
         </div>
         <div class="game-bottom">
-            <p class="input-msg">Round <Span class="round">0</Span>: Choose your next move</p>
+            <p class="input-msg">Round <Span class="round">1</Span>: Choose your next move</p>
             <div class="button-container">
                 <button>Rock</button>
                 <button>Paper</button>

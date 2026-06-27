@@ -9,8 +9,8 @@ body {
 }
 
 .game-window {
-    /* border: 2px solid red;
-    padding: 2px;
+    /* border: 2px solid red; */
+    /* padding: 2px;
     margin: 2px; */
     /*  */
     color: white;
@@ -36,8 +36,50 @@ body {
     align-items: stretch;
 }
 
-.game-top p {
+.header {
     /* border: 2px solid red; */
+    margin: 0px 0px;
+    padding: 0px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.header .left-box,
+.header .right-box {
+    /* border: 2px solid green; */
+    margin: 2px;
+    padding: 2px;
+    width: 150px;
+}
+
+.header .right-box {
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* reset button */
+.right-box button {
+    width: 50px;
+    height: 35px;
+    border-radius: 40px;
+    border: none;
+    color: white;
+    background-color: #2751A3;
+    font-size: large;    
+    transition: transform 0.3s ease, box-shadow 0.3s ease;        
+    display: 
+}
+.right-box button:hover {
+    transform: translateY(-3px) scale(1.03); /* Lifts up and grows slightly */
+    box-shadow: 0 10px 20px rgba(39, 81, 163, 0.4); /* Uses your blue color (#2751A3) for the shadow */
+}
+
+.hidden {
+    display: none;
+}
+
+.header p {
+    /* border: 2px solid green; */
     margin: 6px 0px;
     padding: 8px;
     /*  */

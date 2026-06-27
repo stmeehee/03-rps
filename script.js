@@ -74,7 +74,7 @@ function playRound(playerInput) {
 const MAXSCORE = 5
 let playerWins = 0
 let cpuWins = 0
-let rounds = 0
+let rounds = 1
 let ties = 0
 
 function runRpcGame(input) {    
@@ -93,6 +93,7 @@ function runRpcGame(input) {
 }
 
 function getGameEndMsg() {
+
         let winnerMsg = ""
         if (playerWins > cpuWins){
             winnerMsg = `WINNER: Player won ${playerWins} out of ${rounds} rounds`
@@ -106,6 +107,9 @@ function getGameEndMsg() {
         let tieMsg = ` with ${ties} ties`
         try {
             alert(winnerMsg+tieMsg)
+            // showReset()
+            const resetEvent = new CustomEvent("end")
+            document.dispatchEvent(resetEvent)
         }
         catch (error) {
             if (error instanceof ReferenceError) {
@@ -124,15 +128,8 @@ function updateUI(playerScoreElem, cpuScoreElem, statusMsgElem, winMsg, roundEle
     playerScoreElem.textContent = playerWins
     cpuScoreElem.textContent = cpuWins
     statusMsgElem.textContent = winMsg
-    roundElem.textContent = rounds
+    roundElem.textContent = rounds 
     tiesElem.textContent = ties
-}
-
-function getScores(playerScoreElem, cpuScoreElem, roundElem, tiesElem) {
-    playerWins = Number(playerScoreElem.textContent)
-    cpuWins = Number(cpuScoreElem.textContent)
-    rounds = Number(roundElem.textContent)
-    ties = Number(tiesElem.textContent)
 }
 
 function setup() {
@@ -143,19 +140,35 @@ function setup() {
         const tiesElem = document.querySelector(".ties-score")
         const statusElem = document.querySelector(".status")
         const inputButton = document.querySelector(".button-container")
+        const resetButton = document.querySelector(".reset")
 
         document.addEventListener("playerChoice", (event) => {
-            // getScores(playerScoreElem, cpuScoreElem, roundElem, tiesElem)
             let winner = runRpcGame(event.detail.toLowerCase())
             // sets score and updates UI
             updateUI(playerScoreElem, cpuScoreElem, statusElem, winner, roundElem, tiesElem)
             })        
-        inputButton.addEventListener('click', (event) => {
+        inputButton.addEventListener("click", (event) => {
             const myEvent = new CustomEvent("playerChoice", {
                 detail: event.target.textContent
             }) 
+            if (!checkGameRunning()) {
+                return
+            }             
             document.dispatchEvent(myEvent)
             })
+        // receiver; sender is in endmsg function
+        document.addEventListener("end", () => {
+            resetButton.classList.remove("hidden")  
+        })
+        resetButton.addEventListener("click", () => {
+            playerWins = 0
+            cpuWins = 0
+            ties = 0
+            rounds = 0
+            winner = "Again?"  
+            updateUI(playerScoreElem, cpuScoreElem, statusElem, winner, roundElem, tiesElem)
+            resetButton.classList.add("hidden")
+        })
     }
     else {
         let winner = runRpcGame()
