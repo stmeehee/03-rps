@@ -67,8 +67,8 @@ body {
     background-color: #2751A3;
     font-size: large;    
     transition: transform 0.3s ease, box-shadow 0.3s ease;        
-    display: 
 }
+
 .right-box button:hover {
     transform: translateY(-3px) scale(1.03); /* Lifts up and grows slightly */
     box-shadow: 0 10px 20px rgba(39, 81, 163, 0.4); /* Uses your blue color (#2751A3) for the shadow */
